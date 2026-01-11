@@ -129,13 +129,13 @@ export const TypingGame: React.FC = () => {
             
             <div className="flex items-center gap-4 text-xs text-muted-foreground">
               <span className="flex items-center gap-1">
-                <kbd className="px-2 py-1 bg-secondary rounded text-xs font-mono">esc</kbd>
+                <kbd className="px-2 py-1 bg-secondary rounded text-xs font-mono">Esc</kbd>
                 <span>restart</span>
               </span>
               <span className="hidden md:flex items-center gap-1">
-                <kbd className="px-2 py-1 bg-secondary rounded text-xs font-mono">shift</kbd>
+                <kbd className="px-2 py-1 bg-secondary rounded text-xs font-mono">Shift</kbd>
                 <span>+</span>
-                <kbd className="px-2 py-1 bg-secondary rounded text-xs font-mono">tab</kbd>
+                <kbd className="px-2 py-1 bg-secondary rounded text-xs font-mono">Tab</kbd>
                 <span>restart</span> <br /> <br />
                 <span>Develop by <a href="https://ahriyad.top/" target="_blank" className='text-yellow-300'> ahriyad </a></span>
               </span>
