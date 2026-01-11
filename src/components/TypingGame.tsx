@@ -136,7 +136,7 @@ export const TypingGame: React.FC = () => {
                 <kbd className="px-2 py-1 bg-secondary rounded text-xs font-mono">Shift</kbd>
                 <span>+</span>
                 <kbd className="px-2 py-1 bg-secondary rounded text-xs font-mono">Tab</kbd>
-                <span>restart</span> <br /> <br />
+                <span>Restart</span> <br /> <br />
                 <span>Develop by <a href="https://ahriyad.top/" target="_blank" className='text-yellow-300'> ahriyad </a></span>
               </span>
             </div>
