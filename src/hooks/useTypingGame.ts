@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
-import { generateTypingText } from '@/data/words';
+import { generateTypingText, TypingMode } from '@/data/words';
 
 export interface TypingStats {
   wpm: number;
@@ -19,8 +19,8 @@ export interface TypingGameState {
   stats: TypingStats;
 }
 
-export function useTypingGame(duration: number = 60) {
-  const [text, setText] = useState(() => generateTypingText(100));
+export function useTypingGame(duration: number = 60, mode: TypingMode = 'words') {
+  const [text, setText] = useState(() => generateTypingText(100, mode));
   const [typedText, setTypedText] = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
@@ -62,7 +62,7 @@ export function useTypingGame(duration: number = 60) {
       clearInterval(timerRef.current);
       timerRef.current = null;
     }
-    setText(generateTypingText(100));
+    setText(generateTypingText(100, mode));
     setTypedText('');
     setCurrentIndex(0);
     setIsRunning(false);
@@ -71,7 +71,7 @@ export function useTypingGame(duration: number = 60) {
     setCorrectChars(0);
     setIncorrectChars(0);
     startTimeRef.current = null;
-  }, [duration]);
+  }, [duration, mode]);
 
   const handleKeyPress = useCallback((key: string) => {
     if (isFinished) return;
