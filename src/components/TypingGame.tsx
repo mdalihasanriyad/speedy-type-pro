@@ -94,7 +94,7 @@ export const TypingGame: React.FC = () => {
         <div className="container max-w-4xl mx-auto px-4">
           <div className="flex items-center justify-between">
             <h1 className="text-2xl md:text-3xl font-bold text-gradient">
-              Triwebic Typing
+              Speed Typing
             </h1>
             <ThemeSelector />
           </div>
