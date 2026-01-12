@@ -4,12 +4,15 @@ import { TypingDisplay } from './TypingDisplay';
 import { StatsDisplay } from './StatsDisplay';
 import { ResultsModal } from './ResultsModal';
 import { TimerSelector } from './TimerSelector';
+import { ModeSelector } from './ModeSelector';
 import { Button } from '@/components/ui/button';
 import { RotateCcw, Keyboard } from 'lucide-react';
+import { TypingMode } from '@/data/words';
 
 export const TypingGame: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [selectedDuration, setSelectedDuration] = useState(60);
+  const [selectedMode, setSelectedMode] = useState<TypingMode>('words');
   
   const {
     text,
@@ -21,16 +24,20 @@ export const TypingGame: React.FC = () => {
     stats,
     handleKeyPress,
     resetGame,
-  } = useTypingGame(selectedDuration);
+  } = useTypingGame(selectedDuration, selectedMode);
 
   const handleDurationChange = useCallback((newDuration: number) => {
     setSelectedDuration(newDuration);
   }, []);
 
-  // Reset game when duration changes
+  const handleModeChange = useCallback((newMode: TypingMode) => {
+    setSelectedMode(newMode);
+  }, []);
+
+  // Reset game when duration or mode changes
   useEffect(() => {
     resetGame();
-  }, [selectedDuration]);
+  }, [selectedDuration, selectedMode]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -96,9 +103,14 @@ export const TypingGame: React.FC = () => {
         </div>
       </header>
 
-      {/* Timer Mode Selector */}
+      {/* Mode & Timer Selectors */}
       <div className="py-2">
-        <div className="container max-w-4xl mx-auto px-4 flex justify-center">
+        <div className="container max-w-4xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-center gap-3">
+          <ModeSelector
+            mode={selectedMode}
+            onModeChange={handleModeChange}
+            disabled={isRunning}
+          />
           <TimerSelector
             duration={selectedDuration}
             onDurationChange={handleDurationChange}
