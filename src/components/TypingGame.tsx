@@ -5,8 +5,9 @@ import { StatsDisplay } from './StatsDisplay';
 import { ResultsModal } from './ResultsModal';
 import { TimerSelector } from './TimerSelector';
 import { ModeSelector } from './ModeSelector';
+import { ThemeSelector } from './ThemeSelector';
 import { Button } from '@/components/ui/button';
-import { RotateCcw, Keyboard } from 'lucide-react';
+import { RotateCcw } from 'lucide-react';
 import { TypingMode } from '@/data/words';
 
 export const TypingGame: React.FC = () => {
@@ -95,10 +96,7 @@ export const TypingGame: React.FC = () => {
             <h1 className="text-2xl md:text-3xl font-bold text-gradient">
               Triwebic Typing
             </h1>
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Keyboard className="w-4 h-4" />
-              <span className="hidden md:inline">{selectedDuration} seconds</span>
-            </div>
+            <ThemeSelector />
           </div>
         </div>
       </header>
