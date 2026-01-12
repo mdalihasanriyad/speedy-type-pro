@@ -1,13 +1,16 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { useTypingGame } from '@/hooks/useTypingGame';
 import { TypingDisplay } from './TypingDisplay';
 import { StatsDisplay } from './StatsDisplay';
 import { ResultsModal } from './ResultsModal';
+import { TimerSelector } from './TimerSelector';
 import { Button } from '@/components/ui/button';
 import { RotateCcw, Keyboard } from 'lucide-react';
 
 export const TypingGame: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [selectedDuration, setSelectedDuration] = useState(60);
+  
   const {
     text,
     typedText,
@@ -18,7 +21,16 @@ export const TypingGame: React.FC = () => {
     stats,
     handleKeyPress,
     resetGame,
-  } = useTypingGame(60);
+  } = useTypingGame(selectedDuration);
+
+  const handleDurationChange = useCallback((newDuration: number) => {
+    setSelectedDuration(newDuration);
+  }, []);
+
+  // Reset game when duration changes
+  useEffect(() => {
+    resetGame();
+  }, [selectedDuration]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -58,7 +70,7 @@ export const TypingGame: React.FC = () => {
   if (isFinished) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
-        <ResultsModal stats={stats} onRestart={resetGame} />
+        <ResultsModal stats={stats} onRestart={resetGame} duration={selectedDuration} />
       </div>
     );
   }
@@ -78,11 +90,22 @@ export const TypingGame: React.FC = () => {
             </h1>
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Keyboard className="w-4 h-4" />
-              <span className="hidden md:inline">60 seconds</span>
+              <span className="hidden md:inline">{selectedDuration} seconds</span>
             </div>
           </div>
         </div>
       </header>
+
+      {/* Timer Mode Selector */}
+      <div className="py-2">
+        <div className="container max-w-4xl mx-auto px-4 flex justify-center">
+          <TimerSelector
+            duration={selectedDuration}
+            onDurationChange={handleDurationChange}
+            disabled={isRunning}
+          />
+        </div>
+      </div>
 
       {/* Stats */}
       <div className="py-6 md:py-8">
@@ -136,10 +159,12 @@ export const TypingGame: React.FC = () => {
                 <kbd className="px-2 py-1 bg-secondary rounded text-xs font-mono">Shift</kbd>
                 <span>+</span>
                 <kbd className="px-2 py-1 bg-secondary rounded text-xs font-mono">Tab</kbd>
-                <span>Restart</span> <br /> <br />
-                <span>Develop by <a href="https://ahriyad.top/" target="_blank" className='text-yellow-300'> ahriyad </a></span>
+                <span>Restart</span>
               </span>
             </div>
+            <span className="text-xs text-muted-foreground">
+              Developed by <a href="https://ahriyad.top/" target="_blank" rel="noopener noreferrer" className="text-accent hover:underline">ahriyad</a>
+            </span>
           </div>
         </div>
       </footer>

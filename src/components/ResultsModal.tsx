@@ -6,11 +6,13 @@ import { RotateCcw, Trophy, Target, Zap } from 'lucide-react';
 interface ResultsModalProps {
   stats: TypingStats;
   onRestart: () => void;
+  duration?: number;
 }
 
 export const ResultsModal: React.FC<ResultsModalProps> = ({
   stats,
   onRestart,
+  duration = 60,
 }) => {
   const getWPMRating = (wpm: number) => {
     if (wpm >= 80) return { label: 'Exceptional!', color: 'text-primary' };
@@ -27,7 +29,7 @@ export const ResultsModal: React.FC<ResultsModalProps> = ({
       <div className="text-center mb-8">
         <Trophy className="w-16 h-16 mx-auto mb-4 text-primary" />
         <h2 className={`text-2xl font-bold ${rating.color}`}>{rating.label}</h2>
-        <p className="text-muted-foreground mt-2">Test completed</p>
+        <p className="text-muted-foreground mt-2">{duration} second test completed</p>
       </div>
 
       <div className="grid grid-cols-2 gap-6 mb-8">
