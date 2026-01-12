@@ -131,7 +131,7 @@ export const TypingGame: React.FC = () => {
 
       {/* Typing Area */}
       <main className="flex-1 flex items-center py-8">
-        <div className="container max-w-4xl mx-auto px-4">
+        <div className="container max-w-7xl mx-auto px-4">
           {!isRunning && !isFinished && (
             <p className="text-center text-muted-foreground mb-8 animate-fade-in">
               Start typing to begin the test...
