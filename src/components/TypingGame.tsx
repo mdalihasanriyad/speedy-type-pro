@@ -9,6 +9,7 @@ import { ModeSelector } from './ModeSelector';
 import { ThemeSelector } from './ThemeSelector';
 import { SoundToggle } from './SoundToggle';
 import { WpmGraph } from './WpmGraph';
+import { Leaderboard } from './Leaderboard';
 import { Button } from '@/components/ui/button';
 import { RotateCcw } from 'lucide-react';
 import { TypingMode } from '@/data/words';
@@ -104,7 +105,7 @@ export const TypingGame: React.FC = () => {
   if (isFinished) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
-        <ResultsModal stats={stats} onRestart={resetGame} duration={selectedDuration} />
+        <ResultsModal stats={stats} onRestart={resetGame} duration={selectedDuration} mode={selectedMode} />
       </div>
     );
   }
@@ -123,6 +124,7 @@ export const TypingGame: React.FC = () => {
               Speed Typing
             </h1>
             <div className="flex items-center gap-2">
+              <Leaderboard />
               <SoundToggle soundEnabled={soundEnabled} onToggle={toggleSound} />
               <ThemeSelector />
             </div>
