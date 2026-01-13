@@ -1,11 +1,13 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { useTypingGame } from '@/hooks/useTypingGame';
+import { useSoundEffects } from '@/hooks/useSoundEffects';
 import { TypingDisplay } from './TypingDisplay';
 import { StatsDisplay } from './StatsDisplay';
 import { ResultsModal } from './ResultsModal';
 import { TimerSelector } from './TimerSelector';
 import { ModeSelector } from './ModeSelector';
 import { ThemeSelector } from './ThemeSelector';
+import { SoundToggle } from './SoundToggle';
 import { WpmGraph } from './WpmGraph';
 import { Button } from '@/components/ui/button';
 import { RotateCcw } from 'lucide-react';
@@ -28,6 +30,13 @@ export const TypingGame: React.FC = () => {
     handleKeyPress,
     resetGame,
   } = useTypingGame(selectedDuration, selectedMode);
+
+  const {
+    soundEnabled,
+    toggleSound,
+    playCorrectSound,
+    playIncorrectSound,
+  } = useSoundEffects();
 
   const handleDurationChange = useCallback((newDuration: number) => {
     setSelectedDuration(newDuration);
@@ -65,12 +74,27 @@ export const TypingGame: React.FC = () => {
         return;
       }
 
+      // Play sound based on correctness (only for printable characters)
+      if (e.key.length === 1 && currentIndex < text.length && !isFinished) {
+        const expectedChar = text[currentIndex];
+        if (e.key === expectedChar) {
+          playCorrectSound();
+        } else {
+          playIncorrectSound();
+        }
+      }
+
       handleKeyPress(e.key);
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [handleKeyPress, resetGame]);
+  }, [handleKeyPress, resetGame, currentIndex, text, isFinished, playCorrectSound, playIncorrectSound]);
+
+  // Focus container on mount
+  useEffect(() => {
+    containerRef.current?.focus();
+  }, []);
 
   // Focus container on mount
   useEffect(() => {
@@ -98,7 +122,10 @@ export const TypingGame: React.FC = () => {
             <h1 className="text-2xl md:text-3xl font-bold text-gradient">
               Speed Typing
             </h1>
-            <ThemeSelector />
+            <div className="flex items-center gap-2">
+              <SoundToggle soundEnabled={soundEnabled} onToggle={toggleSound} />
+              <ThemeSelector />
+            </div>
           </div>
         </div>
       </header>
