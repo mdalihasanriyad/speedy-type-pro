@@ -26,11 +26,11 @@ export const Leaderboard: React.FC = () => {
       case 0:
         return <Trophy className="w-5 h-5 text-yellow-500" />;
       case 1:
-        return <Medal className="w-5 h-5 text-gray-400" />;
+        return <Medal className="w-5 h-5  text-gray-400" />;
       case 2:
         return <Award className="w-5 h-5 text-amber-600" />;
       default:
-        return <span className="w-5 h-5 flex items-center justify-center text-muted-foreground font-mono text-sm">{index + 1}</span>;
+        return <span className="w-5 h-5 flex items-center justify-center text-muted-foreground font-mono  text-sm">{index + 1}</span>;
     }
   };
 
