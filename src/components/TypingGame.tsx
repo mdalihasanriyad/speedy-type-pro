@@ -117,7 +117,7 @@ export const TypingGame: React.FC = () => {
       tabIndex={0}
     >
       {/* Header */}
-      <header className="py-6 md:py-8">
+      <header className="py-6">
         <div className="container max-w-4xl mx-auto px-4">
           <div className="flex items-center justify-between">
             <h1 className="text-2xl md:text-3xl font-bold text-gradient">
@@ -149,7 +149,7 @@ export const TypingGame: React.FC = () => {
       </div>
 
       {/* Stats & Graph */}
-      <div className="py-4 md:py-6">
+      <div className="py-4">
         <div className="container max-w-4xl mx-auto px-4">
           <StatsDisplay 
             stats={stats}
@@ -162,7 +162,7 @@ export const TypingGame: React.FC = () => {
       </div>
 
       {/* Typing Area */}
-      <main className="flex-1 flex items-center py-8">
+      <main className="flex-1 flex items-center py-4">
         <div className="container max-w-7xl mx-auto px-4">
           {!isRunning && !isFinished && (
             <p className="text-center text-muted-foreground mb-8 animate-fade-in">
@@ -179,7 +179,7 @@ export const TypingGame: React.FC = () => {
       </main>
 
       {/* Footer */}
-      <footer className="py-6 md:py-8">
+      <footer className="py-6">
         <div className="container max-w-4xl mx-auto px-4">
           <div className="flex flex-col items-center gap-4">
             <Button
