@@ -6,6 +6,7 @@ import { ResultsModal } from './ResultsModal';
 import { TimerSelector } from './TimerSelector';
 import { ModeSelector } from './ModeSelector';
 import { ThemeSelector } from './ThemeSelector';
+import { WpmGraph } from './WpmGraph';
 import { Button } from '@/components/ui/button';
 import { RotateCcw } from 'lucide-react';
 import { TypingMode } from '@/data/words';
@@ -23,6 +24,7 @@ export const TypingGame: React.FC = () => {
     isFinished,
     timeLeft,
     stats,
+    wpmHistory,
     handleKeyPress,
     resetGame,
   } = useTypingGame(selectedDuration, selectedMode);
@@ -117,8 +119,8 @@ export const TypingGame: React.FC = () => {
         </div>
       </div>
 
-      {/* Stats */}
-      <div className="py-6 md:py-8">
+      {/* Stats & Graph */}
+      <div className="py-4 md:py-6">
         <div className="container max-w-4xl mx-auto px-4">
           <StatsDisplay 
             stats={stats}
@@ -126,6 +128,7 @@ export const TypingGame: React.FC = () => {
             isRunning={isRunning}
             isFinished={isFinished}
           />
+          <WpmGraph data={wpmHistory} isRunning={isRunning} />
         </div>
       </div>
 
