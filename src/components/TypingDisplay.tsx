@@ -25,17 +25,18 @@ export const TypingDisplay: React.FC<TypingDisplayProps> = ({
 
         return (
           <span key={index} className="relative inline">
-            {isCurrent && !isFinished && (
-              <span className="typing-cursor absolute -left-0.5" />
-            )}
             <span
               className={cn(
                 'typing-char',
                 isCorrect && 'typing-char-correct',
                 isIncorrect && 'typing-char-incorrect',
-                !isTyped && 'typing-char-upcoming'
+                !isTyped && 'typing-char-upcoming',
+                isCurrent && !isFinished && 'typing-char-current'
               )}
             >
+              {isCurrent && !isFinished && (
+                <span className="typing-cursor" />
+              )}
               {char}
             </span>
           </span>
