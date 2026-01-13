@@ -9,6 +9,11 @@ export interface TypingStats {
   totalChars: number;
 }
 
+export interface WpmDataPoint {
+  time: number;
+  wpm: number;
+}
+
 export interface TypingGameState {
   text: string;
   typedText: string;
@@ -17,6 +22,7 @@ export interface TypingGameState {
   isFinished: boolean;
   timeLeft: number;
   stats: TypingStats;
+  wpmHistory: WpmDataPoint[];
 }
 
 export function useTypingGame(duration: number = 60, mode: TypingMode = 'words') {
@@ -28,9 +34,16 @@ export function useTypingGame(duration: number = 60, mode: TypingMode = 'words')
   const [timeLeft, setTimeLeft] = useState(duration);
   const [correctChars, setCorrectChars] = useState(0);
   const [incorrectChars, setIncorrectChars] = useState(0);
+  const [wpmHistory, setWpmHistory] = useState<WpmDataPoint[]>([]);
   
   const startTimeRef = useRef<number | null>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const correctCharsRef = useRef(0);
+
+  // Keep ref in sync with state for timer callback
+  useEffect(() => {
+    correctCharsRef.current = correctChars;
+  }, [correctChars]);
 
   const calculateStats = useCallback((): TypingStats => {
     const totalChars = correctChars + incorrectChars;
@@ -70,7 +83,9 @@ export function useTypingGame(duration: number = 60, mode: TypingMode = 'words')
     setTimeLeft(duration);
     setCorrectChars(0);
     setIncorrectChars(0);
+    setWpmHistory([]);
     startTimeRef.current = null;
+    correctCharsRef.current = 0;
   }, [duration, mode]);
 
   const handleKeyPress = useCallback((key: string) => {
@@ -126,12 +141,20 @@ export function useTypingGame(duration: number = 60, mode: TypingMode = 'words')
     if (isRunning && timeLeft > 0) {
       timerRef.current = setInterval(() => {
         setTimeLeft(prev => {
-          if (prev <= 1) {
+          const newTimeLeft = prev - 1;
+          const elapsedTime = duration - newTimeLeft;
+          const minutes = elapsedTime / 60;
+          const currentWpm = minutes > 0 ? Math.round((correctCharsRef.current / 5) / minutes) : 0;
+          
+          // Record WPM every second
+          setWpmHistory(history => [...history, { time: elapsedTime, wpm: Math.max(0, currentWpm) }]);
+          
+          if (newTimeLeft <= 0) {
             setIsFinished(true);
             setIsRunning(false);
             return 0;
           }
-          return prev - 1;
+          return newTimeLeft;
         });
       }, 1000);
     }
@@ -142,7 +165,7 @@ export function useTypingGame(duration: number = 60, mode: TypingMode = 'words')
         timerRef.current = null;
       }
     };
-  }, [isRunning]);
+  }, [isRunning, duration]);
 
   return {
     text,
@@ -152,6 +175,7 @@ export function useTypingGame(duration: number = 60, mode: TypingMode = 'words')
     isFinished,
     timeLeft,
     stats: calculateStats(),
+    wpmHistory,
     handleKeyPress,
     resetGame,
   };
