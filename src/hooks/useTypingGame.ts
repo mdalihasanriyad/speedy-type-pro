@@ -14,6 +14,13 @@ export interface WpmDataPoint {
   wpm: number;
 }
 
+export interface KeyPressData {
+  [key: string]: {
+    correct: number;
+    incorrect: number;
+  };
+}
+
 export interface TypingGameState {
   text: string;
   typedText: string;
@@ -23,6 +30,7 @@ export interface TypingGameState {
   timeLeft: number;
   stats: TypingStats;
   wpmHistory: WpmDataPoint[];
+  keyPressData: KeyPressData;
 }
 
 export function useTypingGame(duration: number = 60, mode: TypingMode = 'words') {
@@ -35,6 +43,7 @@ export function useTypingGame(duration: number = 60, mode: TypingMode = 'words')
   const [correctChars, setCorrectChars] = useState(0);
   const [incorrectChars, setIncorrectChars] = useState(0);
   const [wpmHistory, setWpmHistory] = useState<WpmDataPoint[]>([]);
+  const [keyPressData, setKeyPressData] = useState<KeyPressData>({});
   
   const startTimeRef = useRef<number | null>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -84,6 +93,7 @@ export function useTypingGame(duration: number = 60, mode: TypingMode = 'words')
     setCorrectChars(0);
     setIncorrectChars(0);
     setWpmHistory([]);
+    setKeyPressData({});
     startTimeRef.current = null;
     correctCharsRef.current = 0;
   }, [duration, mode]);
@@ -118,6 +128,16 @@ export function useTypingGame(duration: number = 60, mode: TypingMode = 'words')
     if (key.length === 1 && currentIndex < text.length) {
       const expectedChar = text[currentIndex];
       const isCorrect = key === expectedChar;
+
+      // Track key press data
+      const keyLower = key.toLowerCase();
+      setKeyPressData(prev => ({
+        ...prev,
+        [keyLower]: {
+          correct: (prev[keyLower]?.correct || 0) + (isCorrect ? 1 : 0),
+          incorrect: (prev[keyLower]?.incorrect || 0) + (isCorrect ? 0 : 1),
+        }
+      }));
 
       if (isCorrect) {
         setCorrectChars(prev => prev + 1);
@@ -176,6 +196,7 @@ export function useTypingGame(duration: number = 60, mode: TypingMode = 'words')
     timeLeft,
     stats: calculateStats(),
     wpmHistory,
+    keyPressData,
     handleKeyPress,
     resetGame,
   };

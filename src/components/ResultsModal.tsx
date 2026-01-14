@@ -1,11 +1,12 @@
 import React, { useEffect, useState, useRef, useMemo } from 'react';
-import { TypingStats, WpmDataPoint } from '@/hooks/useTypingGame';
+import { TypingStats, WpmDataPoint, KeyPressData } from '@/hooks/useTypingGame';
 import { useLeaderboard, LeaderboardEntry } from '@/hooks/useLeaderboard';
 import { useTestHistory } from '@/hooks/useTestHistory';
 import { Button } from '@/components/ui/button';
 import { RotateCcw, Trophy, Target, Zap, Crown, TrendingUp, ArrowUp, BarChart3 } from 'lucide-react';
 import { TypingMode } from '@/data/words';
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip, ReferenceLine } from 'recharts';
+import { KeyboardHeatmap } from './KeyboardHeatmap';
 
 interface ResultsModalProps {
   stats: TypingStats;
@@ -13,6 +14,7 @@ interface ResultsModalProps {
   duration?: number;
   mode?: TypingMode;
   wpmHistory?: WpmDataPoint[];
+  keyPressData?: KeyPressData;
 }
 
 export const ResultsModal: React.FC<ResultsModalProps> = ({
@@ -21,6 +23,7 @@ export const ResultsModal: React.FC<ResultsModalProps> = ({
   duration = 60,
   mode = 'words',
   wpmHistory = [],
+  keyPressData = {},
 }) => {
   const { saveScore, getPersonalBest } = useLeaderboard();
   const { addTestResult } = useTestHistory();
@@ -170,7 +173,8 @@ export const ResultsModal: React.FC<ResultsModalProps> = ({
         </div>
       )}
 
-      {/* Previous Best Comparison */}
+      {/* Keyboard Heatmap */}
+      <KeyboardHeatmap keyPressData={keyPressData} />
       {previousBest && !isNewRecord && (
         <div className="bg-secondary/30 rounded-lg p-3 mb-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
