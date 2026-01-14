@@ -106,7 +106,7 @@ export const TypingGame: React.FC = () => {
   if (isFinished) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
-        <ResultsModal stats={stats} onRestart={resetGame} duration={selectedDuration} mode={selectedMode} />
+        <ResultsModal stats={stats} onRestart={resetGame} duration={selectedDuration} mode={selectedMode} wpmHistory={wpmHistory} />
       </div>
     );
   }
