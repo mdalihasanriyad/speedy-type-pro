@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { TypingStats } from '@/hooks/useTypingGame';
 import { useLeaderboard, LeaderboardEntry } from '@/hooks/useLeaderboard';
+import { useTestHistory } from '@/hooks/useTestHistory';
 import { Button } from '@/components/ui/button';
 import { RotateCcw, Trophy, Target, Zap, Crown, TrendingUp } from 'lucide-react';
 import { TypingMode } from '@/data/words';
@@ -19,14 +20,32 @@ export const ResultsModal: React.FC<ResultsModalProps> = ({
   mode = 'words',
 }) => {
   const { saveScore, getPersonalBest } = useLeaderboard();
+  const { addTestResult } = useTestHistory();
   const [isNewRecord, setIsNewRecord] = useState(false);
   const [previousBest, setPreviousBest] = useState<LeaderboardEntry | null>(null);
+  const savedRef = useRef(false);
 
   useEffect(() => {
+    // Prevent double-saving on StrictMode re-renders
+    if (savedRef.current) return;
+    savedRef.current = true;
+
+    // Save to leaderboard (personal bests)
     const result = saveScore(duration, mode, stats.wpm, stats.accuracy);
     setIsNewRecord(result.isNewRecord);
     setPreviousBest(result.previousBest);
-  }, [duration, mode, stats.wpm, stats.accuracy, saveScore]);
+
+    // Save to test history (all tests)
+    addTestResult(
+      duration,
+      mode,
+      stats.wpm,
+      stats.accuracy,
+      stats.correctChars,
+      stats.incorrectChars,
+      stats.totalChars
+    );
+  }, [duration, mode, stats, saveScore, addTestResult]);
 
   const getWPMRating = (wpm: number) => {
     if (wpm >= 80) return { label: 'Exceptional!', color: 'text-primary' };

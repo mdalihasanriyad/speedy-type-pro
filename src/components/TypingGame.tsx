@@ -10,6 +10,7 @@ import { ThemeSelector } from './ThemeSelector';
 import { SoundToggle } from './SoundToggle';
 import { WpmGraph } from './WpmGraph';
 import { Leaderboard } from './Leaderboard';
+import { TestHistory } from './TestHistory';
 import { Button } from '@/components/ui/button';
 import { RotateCcw } from 'lucide-react';
 import { TypingMode } from '@/data/words';
@@ -125,6 +126,7 @@ export const TypingGame: React.FC = () => {
             </h1>
             <div className="flex items-center gap-2">
               <Leaderboard />
+              <TestHistory />
               <SoundToggle soundEnabled={soundEnabled} onToggle={toggleSound} />
               <ThemeSelector />
             </div>
