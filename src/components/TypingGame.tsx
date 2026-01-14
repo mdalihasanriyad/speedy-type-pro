@@ -29,6 +29,7 @@ export const TypingGame: React.FC = () => {
     timeLeft,
     stats,
     wpmHistory,
+    keyPressData,
     handleKeyPress,
     resetGame,
   } = useTypingGame(selectedDuration, selectedMode);
@@ -106,7 +107,7 @@ export const TypingGame: React.FC = () => {
   if (isFinished) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
-        <ResultsModal stats={stats} onRestart={resetGame} duration={selectedDuration} mode={selectedMode} wpmHistory={wpmHistory} />
+        <ResultsModal stats={stats} onRestart={resetGame} duration={selectedDuration} mode={selectedMode} wpmHistory={wpmHistory} keyPressData={keyPressData} />
       </div>
     );
   }
