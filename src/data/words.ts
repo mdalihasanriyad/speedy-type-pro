@@ -1,4 +1,4 @@
-export type TypingMode = 'words' | 'quotes' | 'numbers' | 'punctuation';
+export type TypingMode = 'words' | 'quotes' | 'numbers' | 'punctuation' | 'practice';
 
 export const commonWords = [
   "the", "be", "to", "of", "and", "a", "in", "that", "have", "I",
@@ -106,7 +106,33 @@ function getRandomPunctuationPhrases(count: number): string {
   return shuffled.slice(0, Math.min(count, punctuationPhrases.length)).join(" ");
 }
 
-export function generateTypingText(wordCount: number = 50, mode: TypingMode = 'words'): string {
+// Words that contain specific characters for practice mode
+function getWordsContainingChars(chars: string[], count: number): string[] {
+  const charSet = new Set(chars.map(c => c.toLowerCase()));
+  
+  // Filter words that contain any of the target characters
+  const matchingWords = commonWords.filter(word => 
+    [...word.toLowerCase()].some(char => charSet.has(char))
+  );
+  
+  // If not enough matching words, include all words
+  const wordPool = matchingWords.length >= 10 ? matchingWords : commonWords;
+  
+  const words: string[] = [];
+  for (let i = 0; i < count; i++) {
+    // 70% chance to pick from matching words if available
+    if (matchingWords.length > 0 && Math.random() < 0.7) {
+      const randomIndex = Math.floor(Math.random() * matchingWords.length);
+      words.push(matchingWords[randomIndex]);
+    } else {
+      const randomIndex = Math.floor(Math.random() * wordPool.length);
+      words.push(wordPool[randomIndex]);
+    }
+  }
+  return words;
+}
+
+export function generateTypingText(wordCount: number = 50, mode: TypingMode = 'words', weakKeys?: string[]): string {
   switch (mode) {
     case 'quotes':
       return getRandomQuotes(3);
@@ -114,6 +140,11 @@ export function generateTypingText(wordCount: number = 50, mode: TypingMode = 'w
       return generateNumberSequence(wordCount);
     case 'punctuation':
       return getRandomPunctuationPhrases(4);
+    case 'practice':
+      if (weakKeys && weakKeys.length > 0) {
+        return getWordsContainingChars(weakKeys, wordCount).join(" ");
+      }
+      return getRandomWords(wordCount).join(" ");
     case 'words':
     default:
       return getRandomWords(wordCount).join(" ");

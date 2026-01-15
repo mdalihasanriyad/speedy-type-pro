@@ -16,6 +16,7 @@ const modeLabels: Record<TypingMode, string> = {
   quotes: 'Quotes',
   numbers: 'Numbers',
   punctuation: 'Punctuation',
+  practice: 'Practice',
 };
 
 export const TestHistory: React.FC = () => {
