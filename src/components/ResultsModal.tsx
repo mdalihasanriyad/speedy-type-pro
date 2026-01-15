@@ -7,6 +7,7 @@ import { RotateCcw, Trophy, Target, Zap, Crown, TrendingUp, ArrowUp, BarChart3 }
 import { TypingMode } from '@/data/words';
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip, ReferenceLine } from 'recharts';
 import { KeyboardHeatmap } from './KeyboardHeatmap';
+import { ErrorAnalysis } from './ErrorAnalysis';
 
 interface ResultsModalProps {
   stats: TypingStats;
@@ -172,6 +173,9 @@ export const ResultsModal: React.FC<ResultsModalProps> = ({
           </div>
         </div>
       )}
+
+      {/* Error Analysis */}
+      <ErrorAnalysis keyPressData={keyPressData} />
 
       {/* Keyboard Heatmap */}
       <KeyboardHeatmap keyPressData={keyPressData} />
