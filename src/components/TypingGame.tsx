@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { useTypingGame } from '@/hooks/useTypingGame';
 import { useSoundEffects } from '@/hooks/useSoundEffects';
+import { useWeakKeys } from '@/hooks/useWeakKeys';
 import { TypingDisplay } from './TypingDisplay';
 import { StatsDisplay } from './StatsDisplay';
 import { ResultsModal } from './ResultsModal';
@@ -20,6 +21,9 @@ export const TypingGame: React.FC = () => {
   const [selectedDuration, setSelectedDuration] = useState(60);
   const [selectedMode, setSelectedMode] = useState<TypingMode>('words');
   
+  const { updateWeakKeys, getWeakKeys, hasWeakKeys } = useWeakKeys();
+  const weakKeys = getWeakKeys();
+  
   const {
     text,
     typedText,
@@ -32,7 +36,7 @@ export const TypingGame: React.FC = () => {
     keyPressData,
     handleKeyPress,
     resetGame,
-  } = useTypingGame(selectedDuration, selectedMode);
+  } = useTypingGame(selectedDuration, selectedMode, weakKeys);
 
   const {
     soundEnabled,
@@ -104,6 +108,13 @@ export const TypingGame: React.FC = () => {
     containerRef.current?.focus();
   }, []);
 
+  // Update weak keys when test finishes
+  useEffect(() => {
+    if (isFinished && Object.keys(keyPressData).length > 0) {
+      updateWeakKeys(keyPressData);
+    }
+  }, [isFinished, keyPressData, updateWeakKeys]);
+
   if (isFinished) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
@@ -142,6 +153,7 @@ export const TypingGame: React.FC = () => {
             mode={selectedMode}
             onModeChange={handleModeChange}
             disabled={isRunning}
+            hasPracticeData={hasWeakKeys()}
           />
           <TimerSelector
             duration={selectedDuration}

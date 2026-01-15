@@ -33,8 +33,8 @@ export interface TypingGameState {
   keyPressData: KeyPressData;
 }
 
-export function useTypingGame(duration: number = 60, mode: TypingMode = 'words') {
-  const [text, setText] = useState(() => generateTypingText(100, mode));
+export function useTypingGame(duration: number = 60, mode: TypingMode = 'words', weakKeys: string[] = []) {
+  const [text, setText] = useState(() => generateTypingText(100, mode, weakKeys));
   const [typedText, setTypedText] = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
@@ -84,7 +84,7 @@ export function useTypingGame(duration: number = 60, mode: TypingMode = 'words')
       clearInterval(timerRef.current);
       timerRef.current = null;
     }
-    setText(generateTypingText(100, mode));
+    setText(generateTypingText(100, mode, weakKeys));
     setTypedText('');
     setCurrentIndex(0);
     setIsRunning(false);
@@ -96,7 +96,7 @@ export function useTypingGame(duration: number = 60, mode: TypingMode = 'words')
     setKeyPressData({});
     startTimeRef.current = null;
     correctCharsRef.current = 0;
-  }, [duration, mode]);
+  }, [duration, mode, weakKeys]);
 
   const handleKeyPress = useCallback((key: string) => {
     if (isFinished) return;
