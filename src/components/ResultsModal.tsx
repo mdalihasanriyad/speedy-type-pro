@@ -175,7 +175,7 @@ export const ResultsModal: React.FC<ResultsModalProps> = ({
       )}
 
       {/* Error Analysis */}
-      <ErrorAnalysis keyPressData={keyPressData} />
+      {/* <ErrorAnalysis keyPressData={keyPressData} /> */}
 
       {/* Keyboard Heatmap */}
       <KeyboardHeatmap keyPressData={keyPressData} />
