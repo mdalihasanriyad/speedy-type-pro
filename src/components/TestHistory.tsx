@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
-import { History, Trash2, Target, Clock, TrendingUp, Filter, X } from 'lucide-react';
+import { History, Trash2, Target, Clock, TrendingUp, Filter, X, BarChart3 } from 'lucide-react';
+import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip, ReferenceLine, Area, ComposedChart } from 'recharts';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -128,6 +129,31 @@ export const TestHistory: React.FC = () => {
     );
     return { avgWpm, avgAccuracy, count: filteredHistory.length };
   }, [filteredHistory]);
+
+  // Prepare chart data (chronological order - oldest first)
+  const chartData = useMemo(() => {
+    if (filteredHistory.length < 2) return [];
+    
+    // Reverse to get chronological order (oldest first)
+    const chronological = [...filteredHistory].reverse();
+    
+    // Calculate rolling average (last 5 tests)
+    return chronological.map((entry, index) => {
+      const start = Math.max(0, index - 4);
+      const slice = chronological.slice(start, index + 1);
+      const rollingAvg = Math.round(slice.reduce((sum, e) => sum + e.wpm, 0) / slice.length);
+      
+      return {
+        date: new Date(entry.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+        wpm: entry.wpm,
+        rollingAvg,
+        accuracy: entry.accuracy,
+        index: index + 1,
+      };
+    });
+  }, [filteredHistory]);
+
+  const [showChart, setShowChart] = useState(true);
 
   return (
     <Dialog>
@@ -276,6 +302,112 @@ export const TestHistory: React.FC = () => {
               </div>
               <div className="font-bold font-mono">{filteredStats.count}</div>
             </div>
+          </div>
+        )}
+
+        {/* WPM Progress Chart */}
+        {chartData.length >= 2 && (
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                <BarChart3 className="w-3 h-3" />
+                <span>WPM Progress Over Time</span>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowChart(!showChart)}
+                className="text-xs h-6 px-2"
+              >
+                {showChart ? 'Hide' : 'Show'}
+              </Button>
+            </div>
+            
+            {showChart && (
+              <div className="h-32 w-full bg-secondary/20 rounded-lg p-2">
+                <ResponsiveContainer width="100%" height="100%">
+                  <ComposedChart data={chartData} margin={{ top: 5, right: 5, bottom: 5, left: -15 }}>
+                    <defs>
+                      <linearGradient id="wpmGradient" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3}/>
+                        <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0}/>
+                      </linearGradient>
+                    </defs>
+                    <XAxis 
+                      dataKey="index" 
+                      tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }}
+                      tickLine={false}
+                      axisLine={false}
+                      interval="preserveStartEnd"
+                    />
+                    <YAxis 
+                      tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }}
+                      tickLine={false}
+                      axisLine={false}
+                      domain={['dataMin - 5', 'dataMax + 5']}
+                    />
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: 'hsl(var(--background))',
+                        border: '1px solid hsl(var(--border))',
+                        borderRadius: '8px',
+                        fontSize: '12px',
+                      }}
+                      formatter={(value: number, name: string) => [
+                        `${value} WPM`,
+                        name === 'wpm' ? 'Score' : 'Avg (5 tests)'
+                      ]}
+                      labelFormatter={(label) => `Test #${label}`}
+                    />
+                    <ReferenceLine 
+                      y={filteredStats.avgWpm} 
+                      stroke="hsl(var(--muted-foreground))" 
+                      strokeDasharray="3 3"
+                      strokeOpacity={0.5}
+                    />
+                    <Area
+                      type="monotone"
+                      dataKey="wpm"
+                      stroke="none"
+                      fill="url(#wpmGradient)"
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="wpm"
+                      stroke="hsl(var(--primary))"
+                      strokeWidth={2}
+                      dot={{ r: 3, fill: 'hsl(var(--primary))' }}
+                      activeDot={{ r: 5, fill: 'hsl(var(--primary))' }}
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="rollingAvg"
+                      stroke="hsl(var(--success))"
+                      strokeWidth={2}
+                      strokeDasharray="5 5"
+                      dot={false}
+                    />
+                  </ComposedChart>
+                </ResponsiveContainer>
+              </div>
+            )}
+            
+            {showChart && (
+              <div className="flex items-center justify-center gap-4 text-xs text-muted-foreground">
+                <span className="flex items-center gap-1">
+                  <span className="w-3 h-0.5 bg-primary rounded"></span>
+                  Individual
+                </span>
+                <span className="flex items-center gap-1">
+                  <span className="w-3 h-0.5 bg-success rounded" style={{ opacity: 0.8 }}></span>
+                  Rolling Avg
+                </span>
+                <span className="flex items-center gap-1">
+                  <span className="w-3 h-0.5 bg-muted-foreground rounded opacity-50" style={{ borderStyle: 'dashed' }}></span>
+                  Overall Avg
+                </span>
+              </div>
+            )}
           </div>
         )}
         
