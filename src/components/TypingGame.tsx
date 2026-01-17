@@ -174,7 +174,7 @@ export const TypingGame: React.FC = () => {
             isRunning={isRunning}
             isFinished={isFinished}
           />
-          <WpmGraph data={wpmHistory} isRunning={isRunning} />
+          {/* <WpmGraph data={wpmHistory} isRunning={isRunning} /> */}
         </div>
       </div>
 
