@@ -215,9 +215,9 @@ export const TypingGame: React.FC = () => {
                 <span>restart</span>
               </span>
               <span className="hidden md:flex items-center gap-1">
-                <kbd className="px-2 py-1 bg-secondary rounded text-xs font-mono">Shift </kbd>
+                <kbd className="px-2 py-1 bg-secondary rounded text-xs font-mono">Shift</kbd>
                 <span>+</span>
-                <kbd className="px-2 py-1 bg-secondary rounded text-xs font-mono">Tab </kbd>
+                <kbd className="px-2 py-1 bg-secondary rounded text-xs font-mono">Tab</kbd>
                 <span>Restart</span>
               </span>
             </div>
