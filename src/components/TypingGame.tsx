@@ -222,7 +222,7 @@ export const TypingGame: React.FC = () => {
               </span>
             </div>
             <span className="text-xs text-muted-foreground">
-              Developed by <a href="https://ahriyad.top/" target="_blank" rel="noopener noreferrer" className="text-accent hover:underline">ahriyad</a>
+              Developed to <a href="https://ahriyad.top/" target="_blank" rel="noopener noreferrer" className="text-accent hover:underline">ahriyad</a>
             </span>
           </div>
         </div>
