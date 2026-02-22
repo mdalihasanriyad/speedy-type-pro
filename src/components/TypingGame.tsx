@@ -9,7 +9,7 @@ import { TimerSelector } from './TimerSelector';
 import { ModeSelector } from './ModeSelector';
 import { ThemeSelector } from './ThemeSelector';
 import { SoundToggle } from './SoundToggle';
-import { WpmGraph } from './WpmGraph';
+// import { WpmGraph } from './WpmGraph';
 import { Leaderboard } from './Leaderboard';
 import { TestHistory } from './TestHistory';
 import { WeakKeysDashboard } from './WeakKeysDashboard';
@@ -109,7 +109,7 @@ export const TypingGame: React.FC = () => {
     containerRef.current?.focus();
   }, []);
 
-  // Update weak keys when test finishes
+  // Update weak keys when test 
   useEffect(() => {
     if (isFinished && Object.keys(keyPressData).length > 0) {
       updateWeakKeys(keyPressData);
@@ -211,7 +211,7 @@ export const TypingGame: React.FC = () => {
             
             <div className="flex items-center gap-4 text-xs text-muted-foreground">
               <span className="flex items-center gap-1">
-                <kbd className="px-2 py-1 bg-secondary rounded text-xs font-mono">Esc </kbd>
+                <kbd className="px-2 py-1 bg-secondary rounded text-xs font-mono">Esc</kbd>
                 <span>restart</span>
               </span>
               <span className="hidden md:flex items-center gap-1">
